@@ -1,4 +1,5 @@
 from sklearn.svm import *
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import *
 from sklearn.preprocessing import *
 from sklearn.compose import *
@@ -9,7 +10,7 @@ from catboost import CatBoostRegressor
 
 
 import src.config as cfg
-import category_encoders as ce
+from category_encoders.count import CountEncoder
 
 
 cat_pipe = Pipeline([
@@ -26,12 +27,13 @@ real_pipe = Pipeline([
 preprocess_pipe = ColumnTransformer(transformers=[
     ('real_cols', real_pipe, cfg.REAL_COLS),
     ('cat_cols', cat_pipe, cfg.CAT_COLS),
-    ('woe_cat_cols', ce.WOEEncoder(), cfg.CAT_COLS),
-    ('ohe_cols', 'passthrough', cfg.OHE_COLS)
+    ('cat_cols_ce', CountEncoder(), cfg.CAT_COLS),
 ]
 )
 
-model = CatBoostRegressor(iterations=1000, learning_rate=0.5)
+model = CatBoostRegressor(iterations = 1000, learning_rate = 0.01, eval_metric = 'RMSE',
+            random_seed = 37, loss_function = 'RMSE', l2_leaf_reg = 100,
+            depth=4, rsm = 0.6, random_strength = 2)
 
 catboost_regr_model = Pipeline([
     ('preprocess', preprocess_pipe),
@@ -39,9 +41,9 @@ catboost_regr_model = Pipeline([
 ]
 )
 
-model1 = LinearSVR()
+model1 = LinearRegression()
 
-linear_svr_model = Pipeline([
+linear_regr_model = Pipeline([
     ('preprocess', preprocess_pipe),
     ('model', model1)
 ]

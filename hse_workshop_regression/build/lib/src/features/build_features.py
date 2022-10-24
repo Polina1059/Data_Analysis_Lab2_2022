@@ -5,21 +5,21 @@ from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 from src.utils import save_as_pickle
 import pandas as pd
-from features import add_early_wakeup
+from features import featurization
 
 
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_data_filepath', type=click.Path())
 def main(input_filepath, output_data_filepath):
-    """ Runs data processing scripts to turn raw data from (../raw) into
+    """ Runs data processing scripts to turn data from (../interim) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
 
     df = pd.read_pickle(input_filepath)
-    df = add_early_wakeup(df)
+    df = featurization(df)
     save_as_pickle(df, output_data_filepath)
 
 if __name__ == '__main__':

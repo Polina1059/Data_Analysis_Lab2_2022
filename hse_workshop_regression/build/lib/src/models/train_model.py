@@ -6,15 +6,22 @@ from dotenv import find_dotenv, load_dotenv
 from sklearn.model_selection import train_test_split
 from src.utils import save_as_pickle
 import pandas as pd
+from models import catboost_regr_model, linear_svr_model
 
 
 
 @click.command()
 @click.argument('input_data_filepath', type=click.Path(exists=True))
 @click.argument('input_target_filepath', type=click.Path(exists=True))
-@click.argument('output_model_filepath', type=click.Path())
-@click.argument('output_validx_filepath', type=click.Path())
-def main(input_data_filepath, input_target_filepath, output_data_filepath, output_validx_filepath):
+
+@click.argument('output_catboost_regr_model_filepath', type=click.Path())
+@click.argument('output_linear_svr_model_filepath', type=click.Path())
+
+@click.argument('output_val_data_filepath', type=click.Path())
+@click.argument('output_val_target_filepath', type=click.Path())
+
+def main(input_data_filepath, input_target_filepath, output_catboost_regr_model_filepath, output_linear_svr_model_filepath, 
+output_val_data_filepath, output_val_target_filepath):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
@@ -24,15 +31,18 @@ def main(input_data_filepath, input_target_filepath, output_data_filepath, outpu
     train_data = pd.read_pickle(input_data_filepath)
     train_target = pd.read_pickle(input_target_filepath)
 
-    train_idx, val_idx = train_test_split(
-        train_data.index, test_size=0.2, random_state=7)
-    
-    train_data = train_data.loc[train_idx]
-    train_target = train_target.loc[train_idx]
-    # make pipline or CatBoostClassifier
-    # fit, save model or hyperparameters tuning using something like RandomizedSearchCV
+    train_data, val_data, train_target, val_target = train_test_split(train_data, train_target, test_size=0.4, random_state=7)
 
-    save_as_pickle(val_idx, output_validx_filepath)
+    print('First model')
+    catboost_regr_model.fit(train_data, train_target)
+    save_as_pickle(catboost_regr_model, output_catboost_regr_model_filepath)
+
+    print('Second model')
+    linear_svr_model.fit(train_data, train_target)
+    save_as_pickle(linear_svr_model, output_linear_svr_model_filepath)
+
+    save_as_pickle(val_data, output_val_data_filepath)
+    save_as_pickle(val_target, output_val_target_filepath)
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'

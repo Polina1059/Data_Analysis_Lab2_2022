@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# from email.policy import default
 import click
 import logging
 from pathlib import Path
@@ -11,10 +12,10 @@ import pandas as pd
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_data_filepath', type=click.Path())
-@click.argument('output_target_filepath', type=click.Path())
+@click.option('--output_target_filepath', type=click.Path(), default=None)
 def main(input_filepath, output_data_filepath, output_target_filepath=None):
     """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
+        data ready to build features (saved in ../interim).
     """
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
@@ -22,7 +23,7 @@ def main(input_filepath, output_data_filepath, output_target_filepath=None):
     df = pd.read_csv(input_filepath)
     df = preprocess_data(df)
     if output_target_filepath:
-        df, target = extract_target(df)   # разделим датафрэйм на df и таргет
+        df, target = extract_target(df)
         target = preprocess_target(target)
         save_as_pickle(target, output_target_filepath)
     save_as_pickle(df, output_data_filepath)

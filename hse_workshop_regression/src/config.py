@@ -15,18 +15,16 @@ CAT_COLS = ['MSZoning', 'Street', 'LotShape', 'LandContour', 'Utilities',
        'Functional', 'GarageType', 'GarageFinish', 'GarageQual',
        'GarageCond', 'PavedDrive', 'SaleType', 'SaleCondition'
 ]
-OHE_COLS = ['Street', 'CentralAir']
 # столбцы с категориальными признаками, где надо заполнить пропущенные данные
 CAT_COLS_TO_FILL = ['Electrical', 'MasVnrType', 'GarageType', 'GarageCond', 
 'GarageFinish', 'GarageQual', 'BsmtFinType2', 'BsmtExposure', 'BsmtFinType1', 
 'BsmtCond', 'BsmtQual']
-INT_COLS = ['MSSubClass', 'LotArea', 'OverallQual', 'OverallCond', 'YearBuilt',
+REAL_COLS = ['MSSubClass', 'LotArea', 'OverallQual', 'OverallCond', 'YearBuilt',
        'YearRemodAdd', 'BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF',
        '1stFlrSF', '2ndFlrSF', 'LowQualFinSF', 'GrLivArea', 'BsmtFullBath',
        'BsmtHalfBath', 'FullBath', 'HalfBath', 'BedroomAbvGr', 'KitchenAbvGr',
        'TotRmsAbvGrd', 'Fireplaces', 'GarageCars', 'GarageArea', 'WoodDeckSF',
        'OpenPorchSF', 'EnclosedPorch', '3SsnPorch', 'ScreenPorch', 'PoolArea',
-       'MiscVal', 'MoSold', 'YrSold']
-REAL_COLS = ['LotFrontage', 'MasVnrArea', 'GarageYrBlt']   
+       'MiscVal', 'MoSold', 'YrSold', 'LotFrontage', 'MasVnrArea', 'GarageYrBlt']
 
 RS = 7

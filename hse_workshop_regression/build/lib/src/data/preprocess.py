@@ -6,6 +6,10 @@ import src.config as cfg
 
 
 def fill_missing_values(df: pd.DataFrame) -> pd.DataFrame:  # заполним пропущенные данные
+    total = df.isnull().sum().sort_values(ascending=False) 
+    elements_to_drop = [elem for elem in total.index if total[elem]/len(df)>=0.45]
+    df = df.drop(columns=elements_to_drop)  
+
     for col in cfg.CAT_COLS_TO_FILL:
         most_freq = df[col].value_counts().index[0]
         df[col] = df[col].fillna(most_freq)
@@ -44,7 +48,6 @@ def cast_types(df: pd.DataFrame) -> pd.DataFrame:
 def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     df = set_idx(df, cfg.ID_COL)
     df = drop_unnecesary_id(df)
-    # df = add_ord_edu(df)
     df = cast_types(df)
     df = fill_missing_values(df)
     df = fix_wrong_values(df)

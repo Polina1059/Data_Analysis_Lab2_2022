@@ -26,16 +26,7 @@ def main(input_data_filepath, model_filepath, output_prediction_filepath):
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
 
-    df = pd.read_csv(input_data_filepath)
-    df = featurization(df)
     
-    model = pickle.load(open(model_filepath, 'rb'))
-    preds_catboost_regression = model.predict(df)
-    
-    np.savetxt(output_prediction_filepath, preds_catboost_regression, delimiter=",")
-    
-    # save_as_pickle(df, output_prediction_filepath)
-
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)

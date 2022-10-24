@@ -10,3 +10,9 @@ def save_as_pickle(obj: Union[DataFrame, PandasIndex], path: str) -> None:
     elif isinstance(obj, PandasIndex):
         with open('path', 'wb') as f:
             pickle.dump(obj, f)
+    else: 
+        pickle.dump(obj, open(path, 'wb'))
+
+
+def load_model(path: str):
+    return pickle.load(open(path, 'rb'))

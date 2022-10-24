@@ -38,9 +38,6 @@ def drop_unnecesary_id(df: pd.DataFrame) -> pd.DataFrame:
 def cast_types(df: pd.DataFrame) -> pd.DataFrame:
     df[cfg.CAT_COLS] = df[cfg.CAT_COLS].astype('category')
 
-    ohe_int_cols = df[cfg.OHE_COLS].select_dtypes('number').columns
-    df[ohe_int_cols] = df[ohe_int_cols].astype(np.int8)
-
     df[cfg.REAL_COLS] = df[cfg.REAL_COLS].astype(np.float32) 
     return df
 
